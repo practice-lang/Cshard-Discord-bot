@@ -7,11 +7,30 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using NReco.ImageGenerator;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Discord_bot.Modules
 {
     public class Miss : ModuleBase<SocketCommandContext>
     {
+            [Command("neko"), Alias("네코"), Summary("네코 사진")]
+        public async Task neko()
+        {
+
+            using (WebClient client = new WebClient())
+            {
+                var neko = client.DownloadString("https://nekos.life/api/v2/img/neko");
+                 JObject jsonobj = JObject.Parse(neko);
+                var nekourl = jsonobj["url"].ToString();
+
+
+                var embed = new EmbedBuilder();
+                embed.WithImageUrl(nekourl);
+                embed.WithColor(Color.Gold);
+                await Context.Channel.SendMessageAsync("", embed: embed);
+            }
+        }
         [Command("hello"), Alias("안녕"), Summary("사진")]
         public async Task Hello(string color = "red")
         {
